@@ -17,12 +17,12 @@ def index(request):
     return render(
         request,
         "shop/index.html",
-        {"project_name": "Sklep 4TP", "user_name": "Jan Kowalski"},
+        {"project_name": "Sklep 4A", "user_name": "Pavlo Kavkovskyi"},
     )
 
 
 def about(request):
-    return HttpResponse("Jesteśmy klasą 4TP. Robimy sklep internetowy.")
+    return HttpResponse("Jesteśmy klasą 4A. Robimy sklep internetowy.")
 
 
 def contact(request):
@@ -34,7 +34,7 @@ def terms(request):
 
 
 def api_info(request):
-    return JsonResponse({"name": "django-shop", "author": "Jan Kowalski", "version": "0.1"})
+    return JsonResponse({"name": "django-shop", "author": "Pavlo Kavkovskyi", "version": "0.1"})
 
 
 def admin_panel(request):

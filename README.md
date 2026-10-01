@@ -114,4 +114,4 @@ związany z `request.GET`.
 
 ## Autor
 
-Jan Kowalski, 4TP
+Pavlo Kavkovskyi 4A
