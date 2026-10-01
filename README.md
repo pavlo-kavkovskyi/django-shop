@@ -27,6 +27,9 @@ config/settings.py – ustawienia projektu
 config/urls.py     – główna mapa URL: przekazuje prefiksy do aplikacji
 shop/urls.py       – URL-e aplikacji shop (trasy → widoki)
 shop/views.py      – widoki (kontrolery z MVC)
+shop/forms.py      – formularze: opis pól + walidacja
+shop/templates/shop/ – szablony (base.html, index.html, product_*.html)
+shop/static/shop/    – CSS
 ```
 
 Są **dwa** pliki `urls.py`: projektowy mówi „ten prefiks obsługuje aplikacja `shop`”
@@ -51,6 +54,20 @@ Dzięki temu aplikację `shop` można wpiąć do innego projektu jedną linią.
 | GET | `/links/` | `shop:links` | adresy zbudowane przez `reverse` |
 | GET | `/admin/` | – | panel admina Django |
 
+### Dlaczego `shop` dwa razy: `templates/shop/` i `static/shop/`
+
+Django zbiera szablony i pliki statyczne ze **wszystkich** aplikacji do jednej puli.
+Gdyby `shop` i `blog` miały po `index.html`, wygrałby ten z aplikacji wyżej w `INSTALLED_APPS`
+– po cichu, bez błędu. Podfolder z nazwą aplikacji robi z tego `shop/index.html` i `blog/index.html`.
+
+## Trasy – materiał 11
+
+| Metoda | Adres | Nazwa trasy | Opis |
+|--------|-------|-------------|------|
+| GET | `/products/` | `shop:product_list` | lista + wyszukiwarka (`?q=`, `?only_available=on`) |
+| GET/POST | `/products/add/` | `shop:product_add` | formularz z walidacją; po POST redirect |
+| GET | `/products/<int:product_id>/` | `shop:product_detail` | szczegóły; brak → 404 |
+
 ## Obserwacje z zadań
 
 **Ukośnik (zadanie 4).** `/about` bez ukośnika → Django odpowiada 301 na `/about/`, potem 200
@@ -68,6 +85,32 @@ i widok w ogóle się nie wywołuje.
 
 **Brak `app_name` (zadanie 9).** Bez `app_name = "shop"` `redirect("shop:index")` i `reverse("shop:...")`
 kończą się `NoReverseMatch: 'shop' is not a registered namespace`.
+
+## Przepisanie `product_list.html` z Jinja2 na DTL (zadanie 3, materiał 11)
+
+Zmienione miejsca – **7**:
+
+| # | Flask (Jinja2) | Django (DTL) |
+|---|----------------|--------------|
+| 1 | `{{ url_for('product_detail', product_id=p.id) }}` | `{% url 'shop:product_detail' p.id %}` |
+| 2 | `{{ url_for('product_add') }}` | `{% url 'shop:product_add' %}` |
+| 3 | `{{ loop.index }}` | `{{ forloop.counter }}` |
+| 4 | `{{ p.gross_price() }}` (wywołanie metody) | usunięte – w DTL bez nawiasów i bez arytmetyki; liczyć trzeba w modelu |
+| 5 | `{{ p.category.name if p.category else '–' }}` (if w wyrażeniu) | `{{ p.category }}` (kategoria to na razie napis) |
+| 6 | `{{ p.price }}` | `{{ p.price\|floatformat:2 }}` (filtr z argumentem po dwukropku) |
+| 7 | formularz `delete` z `url_for` | usunięty (brak jeszcze usuwania); formularze POST wymagają `{% csrf_token %}` |
+
+## CSRF (zadanie 7)
+
+Atak CSRF polega na tym, że obca strona wysyła w moim imieniu formularz POST do serwisu, w którym jestem zalogowany,
+a przeglądarka dołącza moje ciasteczka. Token CSRF to losowa wartość zapisana w ciasteczku i w ukrytym polu formularza,
+które muszą się zgadzać; obca strona jej nie zna, więc Django odrzuca żądanie kodem 403.
+
+## Wyszukiwarka bez tokena (zadanie 8)
+
+Formularz wyszukiwania używa GET i nie zmienia danych, więc nie ma czego podrabiać – token CSRF jest potrzebny tylko
+przy żądaniach, które zmieniają dane (POST, PUT, PATCH, DELETE). Po wysłaniu pola zostają wypełnione, bo formularz jest
+związany z `request.GET`.
 
 ## Autor
 
