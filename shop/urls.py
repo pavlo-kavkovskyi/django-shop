@@ -19,4 +19,7 @@ urlpatterns = [
     path("divide/<int:a>/<int:b>/", views.divide, name="divide"),
     path("products/<slug:slug>/", views.product_slug, name="product_slug"),
     path("items/", views.items, name="items"),
+    path("items/<int:item_id>/", views.item_detail, name="item_detail"),
+    path("start/", views.start, name="start"),
+    path("links/", views.links, name="links"),
 ]
