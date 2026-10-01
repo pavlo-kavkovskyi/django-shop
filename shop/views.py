@@ -23,3 +23,29 @@ def api_info(request):
 
 def admin_panel(request):
     return HttpResponse("Brak dostępu", status=403)
+
+
+def hello(request, name):
+    return HttpResponse(f"Cześć, {name}!")
+
+
+def hello_age(request, name, age):
+    return HttpResponse(f"Cześć, {name}, masz {age} lat")
+
+
+def add(request, a, b):
+    return HttpResponse(f"{a} + {b} = {a + b}")
+
+
+def subtract(request, a, b):
+    return HttpResponse(f"{a} - {b} = {a - b}")
+
+
+def multiply(request, a, b):
+    return HttpResponse(f"{a} * {b} = {a * b}")
+
+
+def divide(request, a, b):
+    if b == 0:
+        return HttpResponse("Nie dzielimy przez zero", status=400)
+    return HttpResponse(f"{a} / {b} = {a / b}")
