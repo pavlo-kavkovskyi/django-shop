@@ -1,0 +1,10 @@
+body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; }
+nav a { margin-right: 1rem; }
+nav form { display: inline; margin-left: 2rem; }
+nav form p { display: inline; margin-right: .5rem; }
+table { border-collapse: collapse; }
+td, th { border: 1px solid #ccc; padding: .4rem .8rem; }
+tr.unavailable { background: #fdecea; color: #777; }
+.errorlist { color: #c0392b; list-style: none; padding: 0; }
+.wide { width: 24rem; }
+footer { margin-top: 2rem; color: #888; }

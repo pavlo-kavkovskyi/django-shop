@@ -1,5 +1,5 @@
 from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
 ITEMS = {
@@ -12,7 +12,11 @@ ITEMS = {
 
 
 def index(request):
-    return HttpResponse("django-shop – Sklep 4TP")
+    return render(
+        request,
+        "shop/index.html",
+        {"project_name": "Sklep 4TP", "user_name": "Jan Kowalski"},
+    )
 
 
 def about(request):
@@ -91,3 +95,24 @@ def links(request):
         reverse("shop:hello", args=["Ania"]),
     ]
     return HttpResponse("<br>".join(addresses))
+
+
+# Dane tymczasowo w liście słowników (model w materiale 12)
+PRODUCTS = [
+    {"id": 1, "name": "Laptop", "price": 2999, "category": "laptops", "is_available": True},
+    {"id": 2, "name": "Mysz", "price": 49, "category": "accessories", "is_available": False},
+    {"id": 3, "name": "Klawiatura", "price": 199, "category": "accessories", "is_available": True},
+    {"id": 4, "name": "Monitor", "price": 899, "category": "monitors", "is_available": True},
+    {"id": 5, "name": "Słuchawki", "price": 149, "category": "accessories", "is_available": False},
+]
+
+
+def product_list(request):
+    return render(request, "shop/product_list.html", {"products": PRODUCTS})
+
+
+def product_detail(request, product_id):
+    product = next((p for p in PRODUCTS if p["id"] == product_id), None)
+    if product is None:
+        raise Http404("Nie ma takiego produktu")
+    return render(request, "shop/product_detail.html", {"product": product})
