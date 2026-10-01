@@ -4,7 +4,17 @@
 <h1>Nowy produkt</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.non_field_errors }}
+    <p>
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+    </p>
+    {% for field in form %}
+        {% if field.name != "name" %}
+        <p>{{ field.label_tag }} {{ field }} {{ field.errors }}</p>
+        {% endif %}
+    {% endfor %}
     <button>Zapisz</button>
 </form>
 {% endblock %}

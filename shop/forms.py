@@ -8,7 +8,12 @@ CATEGORIES = [
 
 
 class ProductForm(forms.Form):
-    name = forms.CharField(label="Nazwa", max_length=100, min_length=3)
+    name = forms.CharField(
+        label="Nazwa",
+        max_length=100,
+        min_length=3,
+        widget=forms.TextInput(attrs={"class": "wide"}),
+    )
     price = forms.DecimalField(label="Cena", min_value=0.01, max_digits=8, decimal_places=2)
     category = forms.ChoiceField(label="Kategoria", choices=CATEGORIES)
     is_available = forms.BooleanField(label="Dostępny", required=False, initial=True)
