@@ -2,6 +2,8 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from .forms import ProductForm
+
 ITEMS = {
     1: "Laptop",
     2: "Mysz",
@@ -116,3 +118,16 @@ def product_detail(request, product_id):
     if product is None:
         raise Http404("Nie ma takiego produktu")
     return render(request, "shop/product_detail.html", {"product": product})
+
+
+def product_add(request):
+    if request.method == "POST":
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            new_id = max((p["id"] for p in PRODUCTS), default=0) + 1
+            PRODUCTS.append({"id": new_id, **data})
+            return redirect("shop:product_list")
+    else:
+        form = ProductForm()
+    return render(request, "shop/product_form.html", {"form": form})
