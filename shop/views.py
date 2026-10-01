@@ -49,3 +49,16 @@ def divide(request, a, b):
     if b == 0:
         return HttpResponse("Nie dzielimy przez zero", status=400)
     return HttpResponse(f"{a} / {b} = {a / b}")
+
+
+def product_slug(request, slug):
+    return HttpResponse(f"Produkt: {slug}")
+
+
+def items(request):
+    category = request.GET.get("category", "all")
+    sort = request.GET.get("sort", "default")
+    page_raw = request.GET.get("page", "1")
+    # ?page=abc nie może dać 500 – złe dane od klienta to nie błąd serwera
+    page = int(page_raw) if page_raw.isdigit() else 1
+    return HttpResponse(f"Kategoria: {category}, sortowanie: {sort}, strona: {page}")
