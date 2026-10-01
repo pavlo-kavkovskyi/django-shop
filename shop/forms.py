@@ -27,3 +27,8 @@ class ProductForm(forms.Form):
         if price is not None and category == "laptops" and price < 500:
             self.add_error("price", "Laptop za mniej niż 500 zł? Sprawdź cenę.")
         return cleaned
+
+
+class SearchForm(forms.Form):
+    q = forms.CharField(label="Szukaj", required=False, max_length=50)
+    only_available = forms.BooleanField(label="Tylko dostępne", required=False)

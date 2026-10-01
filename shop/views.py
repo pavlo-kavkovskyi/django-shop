@@ -2,7 +2,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .forms import ProductForm
+from .forms import ProductForm, SearchForm
 
 ITEMS = {
     1: "Laptop",
@@ -110,7 +110,17 @@ PRODUCTS = [
 
 
 def product_list(request):
-    return render(request, "shop/product_list.html", {"products": PRODUCTS})
+    form = SearchForm(request.GET)
+    products = PRODUCTS
+    if form.is_valid():
+        q = form.cleaned_data["q"]
+        if q:
+            products = [p for p in products if q.lower() in p["name"].lower()]
+        if form.cleaned_data["only_available"]:
+            products = [p for p in products if p["is_available"]]
+    return render(
+        request, "shop/product_list.html", {"products": products, "form": form}
+    )
 
 
 def product_detail(request, product_id):
